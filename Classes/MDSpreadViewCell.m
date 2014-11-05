@@ -278,26 +278,26 @@
 
 - (void)setHighlightedBackgroundView:(UIView *)aHighlightedBackgroundView
 {
-    [highlightedBackgroundView removeFromSuperview];
-    highlightedBackgroundView = aHighlightedBackgroundView;
-    
-    if (highlighted) {
-        highlightedBackgroundView.alpha = 1;
-        highlightedBackgroundView.hidden = NO;
-    } else {
-        highlightedBackgroundView.alpha = 0;
-        highlightedBackgroundView.hidden = YES;
-    }
-    
-    if (_selectedBackgroundView) {
-        [self insertSubview:highlightedBackgroundView aboveSubview:_selectedBackgroundView];
-    } else if (backgroundView) {
-        [self insertSubview:highlightedBackgroundView aboveSubview:backgroundView];
-    } else {
-        [self insertSubview:highlightedBackgroundView atIndex:0];
-    }
-    
-    [self setNeedsLayout];
+//    [highlightedBackgroundView removeFromSuperview];
+//    highlightedBackgroundView = aHighlightedBackgroundView;
+//    
+//    if (highlighted) {
+//        highlightedBackgroundView.alpha = 1;
+//        highlightedBackgroundView.hidden = NO;
+//    } else {
+//        highlightedBackgroundView.alpha = 0;
+//        highlightedBackgroundView.hidden = YES;
+//    }
+//    
+//    if (_selectedBackgroundView) {
+//        [self insertSubview:highlightedBackgroundView aboveSubview:_selectedBackgroundView];
+//    } else if (backgroundView) {
+//        [self insertSubview:highlightedBackgroundView aboveSubview:backgroundView];
+//    } else {
+//        [self insertSubview:highlightedBackgroundView atIndex:0];
+//    }
+//    
+//    [self setNeedsLayout];
 }
 
 - (void)setSelectedBackgroundView:(UIView *)selectedBackgroundView
@@ -330,7 +330,8 @@
 {
     [super tintColorDidChange];
     
-    _originalSelectedBackground.backgroundColor = [self.tintColor colorWithAlphaComponent:0.15];
+//    _originalSelectedBackground.backgroundColor = [self.tintColor colorWithAlphaComponent:0.15];
+    _originalSelectedBackground.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.15];
 }
 
 #pragma mark - Content Views
@@ -374,6 +375,12 @@
         textLabelFrame.size.height = bounds.size.height;
     }
     textLabel.frame = textLabelFrame;
+    
+    if (self.selected) {
+        [textLabel setTextColor:[UIColor whiteColor]];
+    } else {
+        [textLabel setTextColor:[UIColor blackColor]];
+    }
 }
 
 - (void)prepareForReuse

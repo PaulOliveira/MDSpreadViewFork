@@ -4101,15 +4101,21 @@ static CGFloat MDPixel()
             if (selection.selectionMode == MDSpreadViewSelectionModeNone) continue;
             
             if ([cell._rowPath isEqualToIndexPath:selection.rowPath]) {
-                if (selection.selectionMode == MDSpreadViewSelectionModeRow ||
-                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                if (selection.selectionMode == MDSpreadViewSelectionModeRow ||
+//                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                    shouldSelect = YES;
+//                }
+                if ((selection.selectionMode == MDSpreadViewSelectionModeRow || selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) || ([cell._rowPath isEqualToIndexPath:selection.rowPath] && [cell isKindOfClass:[MDSpreadViewHeaderCell class]] && selection.selectionMode == MDSpreadViewSelectionModeCell)) {
                     shouldSelect = YES;
                 }
             }
             
             if ([cell._columnPath isEqualToIndexPath:selection.columnPath]) {
-                if (selection.selectionMode == MDSpreadViewSelectionModeColumn ||
-                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                if (selection.selectionMode == MDSpreadViewSelectionModeColumn ||
+//                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                    shouldSelect = YES;
+//                }
+                if ((selection.selectionMode == MDSpreadViewSelectionModeColumn || selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) || ([cell._columnPath isEqualToIndexPath:selection.columnPath] && [cell isKindOfClass:[MDSpreadViewHeaderCell class]] && selection.selectionMode == MDSpreadViewSelectionModeCell)) {
                     shouldSelect = YES;
                 }
                 

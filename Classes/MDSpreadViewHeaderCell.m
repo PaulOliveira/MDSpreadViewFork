@@ -65,7 +65,8 @@
             UIView *newBackground = [[UIView alloc] init];
             UIView *newHighlightedBackground = [[UIView alloc] init];
             UIView *newSelectedBackground = [[UIView alloc] init];
-            newBackground.backgroundColor = [UIColor colorWithWhite:247./255. alpha:1];
+//            newBackground.backgroundColor = [UIColor colorWithWhite:247./255. alpha:1];
+            newBackground.backgroundColor = [UIColor colorWithRed:250/255.f green:250/255.f blue:250/255.f alpha:1];
             newHighlightedBackground.backgroundColor = [UIColor colorWithWhite:210./255. alpha:1.];
             newSelectedBackground.backgroundColor = [self.tintColor colorWithAlphaComponent:0.65];
             _originalSelectedBackground = newSelectedBackground;
@@ -178,7 +179,8 @@
 {
     [super tintColorDidChange];
     
-    _originalSelectedBackground.backgroundColor = [self.tintColor colorWithAlphaComponent:0.65];
+//    _originalSelectedBackground.backgroundColor = [self.tintColor colorWithAlphaComponent:0.65];
+    _originalSelectedBackground.backgroundColor = [UIColor colorWithRed:74/255.f green:74/255.f blue:74/255.f alpha:1];
 }
 
 - (BOOL)isAccessibilityElement
