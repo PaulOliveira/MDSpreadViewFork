@@ -376,11 +376,11 @@
     }
     textLabel.frame = textLabelFrame;
     
-    if (self.selected) {
-        [textLabel setTextColor:[UIColor whiteColor]];
-    } else {
-        [textLabel setTextColor:[UIColor blackColor]];
-    }
+//    if (self.selected) {
+//        [textLabel setTextColor:[UIColor whiteColor]];
+//    } else {
+//        [textLabel setTextColor:[UIColor blackColor]];
+//    }
 }
 
 - (void)prepareForReuse
