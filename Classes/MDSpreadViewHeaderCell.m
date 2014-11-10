@@ -157,6 +157,12 @@
     } else {
         self.textLabel.frame = CGRectMake(14, 2, bounds.size.width - 28, bounds.size.height - 3);
     }
+    
+    if (self.selected) {
+        [self.textLabel setTextColor:[UIColor whiteColor]];
+    } else {
+        [self.textLabel setTextColor:[UIColor blackColor]];
+    }
 }
 
 - (void)prepareForReuse

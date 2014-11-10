@@ -375,12 +375,6 @@
         textLabelFrame.size.height = bounds.size.height;
     }
     textLabel.frame = textLabelFrame;
-    
-//    if (self.selected) {
-//        [textLabel setTextColor:[UIColor whiteColor]];
-//    } else {
-//        [textLabel setTextColor:[UIColor blackColor]];
-//    }
 }
 
 - (void)prepareForReuse
