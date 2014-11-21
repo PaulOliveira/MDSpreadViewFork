@@ -114,6 +114,7 @@
             self.textLabel.highlightedTextColor = [UIColor whiteColor];
         }
     }
+    
     return self;
 }
 
@@ -121,7 +122,7 @@
 
 - (BOOL)hasSeparators
 {
-    return NO;
+    return YES;
 }
 
 - (void)updateSortIndicator:(MDSpreadViewCellSortIndicator)sortIndicator sortAxis:(MDSpreadViewSortAxis)sortAxis

@@ -1112,7 +1112,7 @@ static CGFloat MDPixel()
         CGFloat pixel = MDPixel();
         
         UIGraphicsBeginImageContextWithOptions(CGSizeMake(2, 2), NO, 0);
-        
+
         [_separatorColor setFill];
         
         if (_separatorStyle == MDSpreadViewCellSeparatorStyleCorner) {
@@ -2979,21 +2979,39 @@ static CGFloat MDPixel()
         if (selection.selectionMode == MDSpreadViewSelectionModeNone) continue;
         
         if ([cell._rowPath isEqualToIndexPath:selection.rowPath]) {
-            if (selection.selectionMode == MDSpreadViewSelectionModeRow ||
-                selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                if (selection.selectionMode == MDSpreadViewSelectionModeRow ||
+//                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                    shouldSelect = YES;
+//                }
+            if ((selection.selectionMode == MDSpreadViewSelectionModeRow || selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) || ([cell._rowPath isEqualToIndexPath:selection.rowPath] && cell._rowPath.row != -1 && [cell isKindOfClass:[MDSpreadViewHeaderCell class]] && selection.selectionMode == MDSpreadViewSelectionModeCell)) {
                 shouldSelect = YES;
             }
         }
         
         if ([cell._columnPath isEqualToIndexPath:selection.columnPath]) {
-            if (selection.selectionMode == MDSpreadViewSelectionModeColumn ||
-                selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                if (selection.selectionMode == MDSpreadViewSelectionModeColumn ||
+//                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                    shouldSelect = YES;
+//                }
+            if ((selection.selectionMode == MDSpreadViewSelectionModeColumn || selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) || ([cell._columnPath isEqualToIndexPath:selection.columnPath] && cell._columnPath.row != -1 && [cell isKindOfClass:[MDSpreadViewHeaderCell class]] && selection.selectionMode == MDSpreadViewSelectionModeCell)) {
                 shouldSelect = YES;
             }
             
-            if ([cell._rowPath isEqualToIndexPath:selection.rowPath] && selection.selectionMode == MDSpreadViewSelectionModeCell) {
+            if ([cell._rowPath isEqualToIndexPath:selection.rowPath] && selection.selectionMode == MDSpreadViewSelectionModeCell && ![cell isKindOfClass:[MDSpreadViewHeaderCell class]]) {
                 shouldSelect = YES;
+                [cell.selectedBackgroundView setBackgroundColor:[UIColor clearColor]];
+                [cell.selectedBackgroundView.layer setBorderColor:EDZONE_TINT_COLOR.CGColor];
+                [cell.selectedBackgroundView.layer setBorderWidth:2.0f];
             }
+        }
+        
+        if ((cell._columnPath.column == -1 && selection.selectionMode == MDSpreadViewSelectionModeColumn) || (cell._rowPath.row == -1 && selection.selectionMode == MDSpreadViewSelectionModeRow)) {
+            shouldSelect = YES;
+        }
+        
+        if (selection.selectionMode == MDSpreadViewSelectionModeColumn && ![cell isKindOfClass:[MDSpreadViewHeaderCell class]]) {
+            [cell.selectedBackgroundView.layer setBorderColor:[UIColor clearColor].CGColor];
+            [cell.selectedBackgroundView setBackgroundColor:[[UIColor grayColor] colorWithAlphaComponent:0.15]];
         }
     }
     
@@ -3877,7 +3895,9 @@ static CGFloat MDPixel()
         if (resolvedSelectionMode == MDSpreadViewSelectionModeAutomatic) {
             resolvedSelectionMode = _cornerHeaderHighlightMode;
         }
-    } else if (row == -1 || row == rowSectionCount) { // header row
+    }
+    
+    if (row == -1 || row == rowSectionCount) { // header row
         
         if (!_allowsColumnHeaderSelection && !override) {
             return NO;
@@ -4055,21 +4075,39 @@ static CGFloat MDPixel()
             if (selection.selectionMode == MDSpreadViewSelectionModeNone || selection.selectionMode == MDSpreadViewSelectionModeAutomatic) continue;
             
             if ([cell._rowPath isEqualToIndexPath:selection.rowPath]) {
-                if (selection.selectionMode == MDSpreadViewSelectionModeRow ||
-                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                if (selection.selectionMode == MDSpreadViewSelectionModeRow ||
+//                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                    shouldSelect = YES;
+//                }
+                if ((selection.selectionMode == MDSpreadViewSelectionModeRow || selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) || ([cell._rowPath isEqualToIndexPath:selection.rowPath] && cell._rowPath.row != -1 && [cell isKindOfClass:[MDSpreadViewHeaderCell class]] && selection.selectionMode == MDSpreadViewSelectionModeCell)) {
                     shouldSelect = YES;
                 }
             }
             
             if ([cell._columnPath isEqualToIndexPath:selection.columnPath]) {
-                if (selection.selectionMode == MDSpreadViewSelectionModeColumn ||
-                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                if (selection.selectionMode == MDSpreadViewSelectionModeColumn ||
+//                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
+//                    shouldSelect = YES;
+//                }
+                if ((selection.selectionMode == MDSpreadViewSelectionModeColumn || selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) || ([cell._columnPath isEqualToIndexPath:selection.columnPath] && cell._columnPath.row != -1 && [cell isKindOfClass:[MDSpreadViewHeaderCell class]] && selection.selectionMode == MDSpreadViewSelectionModeCell)) {
                     shouldSelect = YES;
                 }
                 
-                if ([cell._rowPath isEqualToIndexPath:selection.rowPath] && selection.selectionMode == MDSpreadViewSelectionModeCell) {
+                if ([cell._rowPath isEqualToIndexPath:selection.rowPath] && selection.selectionMode == MDSpreadViewSelectionModeCell && ![cell isKindOfClass:[MDSpreadViewHeaderCell class]]) {
                     shouldSelect = YES;
+                    [cell.selectedBackgroundView setBackgroundColor:[UIColor clearColor]];
+                    [cell.selectedBackgroundView.layer setBorderColor:EDZONE_TINT_COLOR.CGColor];
+                    [cell.selectedBackgroundView.layer setBorderWidth:2.0f];
                 }
+            }
+            
+            if ((cell._columnPath.column == -1 && selection.selectionMode == MDSpreadViewSelectionModeColumn) || (cell._rowPath.row == -1 && selection.selectionMode == MDSpreadViewSelectionModeRow)) {
+                shouldSelect = YES;
+            }
+            
+            if (selection.selectionMode == MDSpreadViewSelectionModeColumn && ![cell isKindOfClass:[MDSpreadViewHeaderCell class]]) {
+                [cell.selectedBackgroundView.layer setBorderColor:[UIColor clearColor].CGColor];
+                [cell.selectedBackgroundView setBackgroundColor:[[UIColor grayColor] colorWithAlphaComponent:0.15]];
             }
         }
         [cell setSelected:shouldSelect animated:animated];
@@ -4105,7 +4143,7 @@ static CGFloat MDPixel()
 //                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
 //                    shouldSelect = YES;
 //                }
-                if ((selection.selectionMode == MDSpreadViewSelectionModeRow || selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) || ([cell._rowPath isEqualToIndexPath:selection.rowPath] && [cell isKindOfClass:[MDSpreadViewHeaderCell class]] && selection.selectionMode == MDSpreadViewSelectionModeCell)) {
+                if ((selection.selectionMode == MDSpreadViewSelectionModeRow || selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) || ([cell._rowPath isEqualToIndexPath:selection.rowPath] && cell._rowPath.row != -1 && [cell isKindOfClass:[MDSpreadViewHeaderCell class]] && selection.selectionMode == MDSpreadViewSelectionModeCell)) {
                     shouldSelect = YES;
                 }
             }
@@ -4115,13 +4153,25 @@ static CGFloat MDPixel()
 //                    selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) {
 //                    shouldSelect = YES;
 //                }
-                if ((selection.selectionMode == MDSpreadViewSelectionModeColumn || selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) || ([cell._columnPath isEqualToIndexPath:selection.columnPath] && [cell isKindOfClass:[MDSpreadViewHeaderCell class]] && selection.selectionMode == MDSpreadViewSelectionModeCell)) {
+                if ((selection.selectionMode == MDSpreadViewSelectionModeColumn || selection.selectionMode == MDSpreadViewSelectionModeRowAndColumn) || ([cell._columnPath isEqualToIndexPath:selection.columnPath] && cell._columnPath.row != -1 && [cell isKindOfClass:[MDSpreadViewHeaderCell class]] && selection.selectionMode == MDSpreadViewSelectionModeCell)) {
                     shouldSelect = YES;
                 }
                 
-                if ([cell._rowPath isEqualToIndexPath:selection.rowPath] && selection.selectionMode == MDSpreadViewSelectionModeCell) {
+                if ([cell._rowPath isEqualToIndexPath:selection.rowPath] && selection.selectionMode == MDSpreadViewSelectionModeCell && ![cell isKindOfClass:[MDSpreadViewHeaderCell class]]) {
                     shouldSelect = YES;
+                    [cell.selectedBackgroundView setBackgroundColor:[UIColor clearColor]];
+                    [cell.selectedBackgroundView.layer setBorderColor:EDZONE_TINT_COLOR.CGColor];
+                    [cell.selectedBackgroundView.layer setBorderWidth:2.0f];
                 }
+            }
+            
+            if ((cell._columnPath.column == -1 && selection.selectionMode == MDSpreadViewSelectionModeColumn) || (cell._rowPath.row == -1 && selection.selectionMode == MDSpreadViewSelectionModeRow)) {
+                shouldSelect = YES;
+            }
+            
+            if ((selection.selectionMode == MDSpreadViewSelectionModeColumn || selection.selectionMode == MDSpreadViewSelectionModeRow) && ![cell isKindOfClass:[MDSpreadViewHeaderCell class]]) {
+                [cell.selectedBackgroundView.layer setBorderColor:[UIColor clearColor].CGColor];
+                [cell.selectedBackgroundView setBackgroundColor:[[UIColor grayColor] colorWithAlphaComponent:0.15]];
             }
         }
         [cell setSelected:shouldSelect animated:animated];
