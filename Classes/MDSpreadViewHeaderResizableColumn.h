@@ -8,6 +8,19 @@
 
 #import "MDSpreadViewHeaderCell.h"
 
+@class MDSpreadViewHeaderResizableColumn;
+
+@protocol MDSpreadViewHeaderResizableColumnDelegate <NSObject>
+
+- (void)spreadViewHeaderResizableColumn:(MDSpreadViewHeaderResizableColumn *)spreadViewHeaderResizableColumn didResizeWithWidth:(CGFloat)width;
+
+@end
+
 @interface MDSpreadViewHeaderResizableColumn : MDSpreadViewHeaderCell
+
+@property (strong, nonatomic, readonly) MDIndexPath *_rowPath;
+@property (strong, nonatomic, readonly) MDIndexPath *_columnPath;
+
+@property (weak, nonatomic) id<MDSpreadViewHeaderResizableColumnDelegate> delegate;
 
 @end
