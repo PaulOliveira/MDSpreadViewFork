@@ -6,32 +6,42 @@
 //  Copyright (c) 2014 Synvata. All rights reserved.
 //
 
-#import "MDSpreadViewHeaderResizableColumn.h"
+#import "MDSpreadViewResizableHeaderCell.h"
 
-@interface MDSpreadViewHeaderResizableColumn()<UIGestureRecognizerDelegate>
+@interface MDSpreadViewResizableHeaderCell()<UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) UIView *viewResize;
 @property (strong, nonatomic) UIPanGestureRecognizer *resizeGesture;
 @property (strong, nonatomic) UIView *viewIndicator;
+@property (nonatomic) MDSpreadViewHeaderCellStyle headerCellStyle;
 
 @end
 
-@implementation MDSpreadViewHeaderResizableColumn
+@implementation MDSpreadViewResizableHeaderCell
 
 @dynamic _rowPath, _columnPath;
 
 static CGFloat const ViewResizeHeight = 24.0;
 static CGFloat const ViewResizeWidth = 9.5;
-static CGFloat const ViewResizeRightMargin = 5.0;
+static CGFloat const ViewResizeMargin = 5.0;
 static CGFloat const IndicatorViewWidth = 1.5;
 
 - (id)initWithStyle:(MDSpreadViewHeaderCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        _headerCellStyle = style;
+        
         _viewResize = [[UIView alloc] initWithFrame:[self getViewResizeFrame]];
         UIImage *imgResize = [[UIImage imageNamed:@"MDSpreadViewResize"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         UIImageView *imgViewResize = [[UIImageView alloc] initWithImage:imgResize];
         [imgViewResize setBackgroundColor:[UIColor darkGrayColor]];
+        if (style == MDSpreadViewHeaderCellStyleColumn) {
+            [imgViewResize setTransform:CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(90.0))];
+            CGRect imgFrame = imgViewResize.frame;
+            imgFrame.origin.x = 0;
+            imgFrame.origin.y = 0;
+            [imgViewResize setFrame:imgFrame];
+        }
         [_viewResize addSubview:imgViewResize];
         [_viewResize setTintColor:[UIColor lightGrayColor]];
         [_viewResize setHidden:YES];
@@ -48,9 +58,17 @@ static CGFloat const IndicatorViewWidth = 1.5;
 #pragma mark - Layout
 
 - (CGRect)getViewResizeFrame {
-    CGFloat x = CGRectGetWidth(self.frame) - ViewResizeWidth - ViewResizeRightMargin;
-    CGFloat y = (CGRectGetHeight(self.frame) / 2) - (ViewResizeHeight / 2);
-    return CGRectMake(x, y, ViewResizeWidth, ViewResizeHeight);
+    CGRect frame;
+    if (self.headerCellStyle == MDSpreadViewHeaderCellStyleColumn) {
+        CGFloat x = (CGRectGetWidth(self.frame) / 2) - (ViewResizeHeight / 2);
+        CGFloat y = CGRectGetHeight(self.frame) - ViewResizeWidth;
+        frame = CGRectMake(x, y, ViewResizeHeight, ViewResizeWidth);
+    } else {
+        CGFloat x = CGRectGetWidth(self.frame) - ViewResizeWidth - ViewResizeMargin;
+        CGFloat y = (CGRectGetHeight(self.frame) / 2) - (ViewResizeHeight / 2);
+        frame = CGRectMake(x, y, ViewResizeWidth, ViewResizeHeight);
+    }
+    return frame;
 }
 
 - (void)layoutSubviews {
@@ -62,7 +80,13 @@ static CGFloat const IndicatorViewWidth = 1.5;
 
 - (CGRect)getViewIndicatorFrame {
     UIView *superView = [self superview];
-    return CGRectMake(0, 0, IndicatorViewWidth, superView.frame.size.height);
+    CGRect frame;
+    if (self.headerCellStyle == MDSpreadViewHeaderCellStyleColumn) {
+        frame = CGRectMake(0, 0, superView.frame.size.width, IndicatorViewWidth);
+    } else {
+        frame = CGRectMake(0, 0, IndicatorViewWidth, superView.frame.size.height);
+    }
+    return frame;
 }
 
 - (UIView *)viewIndicator {
@@ -81,10 +105,17 @@ static CGFloat const IndicatorViewWidth = 1.5;
     CGPoint point = [gesture locationInView:self.superview];
     
     CGRect newFrame = self.viewIndicator.frame;
-    newFrame.origin.x = point.x;
     
-    if (newFrame.origin.x <= self.frame.origin.x + ((ViewResizeWidth + ViewResizeRightMargin) * 1.5)) {
-        newFrame.origin.x = self.frame.origin.x + ((ViewResizeWidth + ViewResizeRightMargin) * 1.5);
+    if (self.headerCellStyle == MDSpreadViewHeaderCellStyleColumn) {
+        newFrame.origin.y = point.y;
+        if (newFrame.origin.y <= (self.frame.origin.y + ((ViewResizeWidth + ViewResizeMargin) * 1.5))) {
+            newFrame.origin.y = self.frame.origin.y + ((ViewResizeWidth + ViewResizeMargin) * 1.5);
+        }
+    } else {
+        newFrame.origin.x = point.x;
+        if (newFrame.origin.x <= (self.frame.origin.x + ((ViewResizeWidth + ViewResizeMargin) * 1.5))) {
+            newFrame.origin.x = self.frame.origin.x + ((ViewResizeWidth + ViewResizeMargin) * 1.5);
+        }
     }
     
     if (gesture.state == UIGestureRecognizerStateBegan) {
@@ -95,9 +126,14 @@ static CGFloat const IndicatorViewWidth = 1.5;
         [self.viewIndicator setHidden:NO];
         [self.viewIndicator setFrame:newFrame];
     } else if (gesture.state == UIGestureRecognizerStateEnded) {
-        if ([self.delegate respondsToSelector:@selector(spreadViewHeaderResizableColumn:didResizeWithWidth:)]) {
-            CGFloat width = self.viewIndicator.frame.origin.x - self.frame.origin.x;
-            [self.delegate spreadViewHeaderResizableColumn:self didResizeWithWidth:width];
+        if ([self.delegate respondsToSelector:@selector(spreadViewResizableHeaderCell:didResizeWithValue:andStyle:)]) {
+            CGFloat value;
+            if (self.headerCellStyle == MDSpreadViewHeaderCellStyleColumn) {
+                value = self.viewIndicator.frame.origin.y - self.frame.origin.y;
+            } else {
+                value = self.viewIndicator.frame.origin.x - self.frame.origin.x;
+            }
+            [self.delegate spreadViewResizableHeaderCell:self didResizeWithValue:value andStyle:self.headerCellStyle];
         }
         [self.viewIndicator setHidden:YES];
         [self.viewIndicator removeFromSuperview];

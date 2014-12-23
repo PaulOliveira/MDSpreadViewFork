@@ -37,6 +37,6 @@
 #import "MDSpreadView.h"
 #import "MDSpreadViewCell.h"
 #import "MDSpreadViewHeaderCell.h"
-#import "MDSpreadViewHeaderResizableColumn.h"
+#import "MDSpreadViewResizableHeaderCell.h"
 
 #endif
