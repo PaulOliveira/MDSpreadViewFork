@@ -331,7 +331,7 @@
     [super tintColorDidChange];
     
 //    _originalSelectedBackground.backgroundColor = [self.tintColor colorWithAlphaComponent:0.15];
-    _originalSelectedBackground.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.15];
+//    _originalSelectedBackground.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.15];
 }
 
 #pragma mark - Content Views
