@@ -11,6 +11,7 @@
 @interface MDSpreadViewResizableHeaderCell()<UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) UIView *viewResize;
+@property (strong, nonatomic) UIImageView *imgViewResize;
 @property (strong, nonatomic) UIPanGestureRecognizer *resizeGesture;
 @property (strong, nonatomic) UIView *viewIndicator;
 @property (nonatomic) MDSpreadViewHeaderCellStyle headerCellStyle;
@@ -21,9 +22,8 @@
 
 @dynamic _rowPath, _columnPath;
 
-static CGFloat const ViewResizeHeight = 24.0;
-static CGFloat const ViewResizeWidth = 9.5;
-static CGFloat const ViewResizeMargin = 5.0;
+static CGFloat const ViewResizeHeight = 36.0;
+static CGFloat const ViewResizeWidth = 20.0;
 static CGFloat const IndicatorViewWidth = 1.5;
 
 - (id)initWithStyle:(MDSpreadViewHeaderCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -33,16 +33,14 @@ static CGFloat const IndicatorViewWidth = 1.5;
         
         _viewResize = [[UIView alloc] initWithFrame:[self getViewResizeFrame]];
         UIImage *imgResize = [[UIImage imageNamed:@"MDSpreadViewResize"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        UIImageView *imgViewResize = [[UIImageView alloc] initWithImage:imgResize];
-        [imgViewResize setBackgroundColor:[UIColor darkGrayColor]];
+        _imgViewResize = [[UIImageView alloc] initWithImage:imgResize];
+        [_imgViewResize setBackgroundColor:[UIColor darkGrayColor]];
         if (style == MDSpreadViewHeaderCellStyleColumn) {
-            [imgViewResize setTransform:CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(90.0))];
-            CGRect imgFrame = imgViewResize.frame;
-            imgFrame.origin.x = 0;
-            imgFrame.origin.y = 0;
-            [imgViewResize setFrame:imgFrame];
+            [_imgViewResize setTransform:CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(90.0))];
         }
-        [_viewResize addSubview:imgViewResize];
+        [_imgViewResize setFrame:[self getImgViewResizeFrame]];
+        [_viewResize addSubview:_imgViewResize];
+        
         [_viewResize setTintColor:[UIColor lightGrayColor]];
         [_viewResize setHidden:YES];
         [self addSubview:_viewResize];
@@ -64,10 +62,29 @@ static CGFloat const IndicatorViewWidth = 1.5;
         CGFloat y = CGRectGetHeight(self.frame) - ViewResizeWidth;
         frame = CGRectMake(x, y, ViewResizeHeight, ViewResizeWidth);
     } else {
-        CGFloat x = CGRectGetWidth(self.frame) - ViewResizeWidth - ViewResizeMargin;
+        CGFloat x = CGRectGetWidth(self.frame) - ViewResizeWidth;
         CGFloat y = (CGRectGetHeight(self.frame) / 2) - (ViewResizeHeight / 2);
         frame = CGRectMake(x, y, ViewResizeWidth, ViewResizeHeight);
     }
+    return frame;
+}
+
+- (CGRect)getImgViewResizeFrame {
+    CGRect frame;
+    CGFloat imgViewHeight = CGRectGetHeight(self.imgViewResize.frame);
+    CGFloat imgViewWidth = CGRectGetWidth(self.imgViewResize.frame);
+    CGFloat x = 0;
+    CGFloat y = 0;
+    
+    if (self.headerCellStyle == MDSpreadViewHeaderCellStyleColumn) {
+        x = (CGRectGetWidth(self.viewResize.frame) / 2) - (imgViewWidth / 2);
+        y = CGRectGetHeight(self.viewResize.frame) - imgViewHeight - 2.0;
+    } else {
+        x = (CGRectGetWidth(self.viewResize.frame) / 2) - (imgViewWidth / 2);
+        y = (CGRectGetHeight(self.viewResize.frame) / 2) - (imgViewHeight / 2);
+    }
+    frame = CGRectMake(x, y, imgViewWidth, imgViewHeight);
+    
     return frame;
 }
 
@@ -108,13 +125,13 @@ static CGFloat const IndicatorViewWidth = 1.5;
     
     if (self.headerCellStyle == MDSpreadViewHeaderCellStyleColumn) {
         newFrame.origin.y = point.y;
-        if (newFrame.origin.y <= (self.frame.origin.y + ((ViewResizeWidth + ViewResizeMargin) * 1.5))) {
-            newFrame.origin.y = self.frame.origin.y + ((ViewResizeWidth + ViewResizeMargin) * 1.5);
+        if (newFrame.origin.y <= (self.frame.origin.y + ViewResizeWidth)) {
+            newFrame.origin.y = self.frame.origin.y + ViewResizeWidth;
         }
     } else {
         newFrame.origin.x = point.x;
-        if (newFrame.origin.x <= (self.frame.origin.x + ((ViewResizeWidth + ViewResizeMargin) * 1.5))) {
-            newFrame.origin.x = self.frame.origin.x + ((ViewResizeWidth + ViewResizeMargin) * 1.5);
+        if (newFrame.origin.x <= (self.frame.origin.x + (ViewResizeWidth * 1.5))) {
+            newFrame.origin.x = self.frame.origin.x + (ViewResizeWidth * 1.5);
         }
     }
     
