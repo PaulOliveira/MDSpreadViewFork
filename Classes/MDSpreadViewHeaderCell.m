@@ -150,13 +150,13 @@
     
     if (self.selected && !self.sortIndicatorImage.hidden) {
         if (bounds.size.width - 28 - 32 > 42) {
-            self.textLabel.frame = CGRectMake(14, 2, bounds.size.width - 28 - 32, bounds.size.height - 3);
+            self.textLabel.frame = CGRectMake(0, 2, bounds.size.width, bounds.size.height - 3);
         } else {
-            self.textLabel.frame = CGRectMake(2, 2, bounds.size.width - 18, bounds.size.height - 3);
-            _sortIndicatorImage.frame = CGRectMake(bounds.size.width - 26, 0, 32, bounds.size.height);
+            self.textLabel.frame = CGRectMake(0, 2, bounds.size.width, bounds.size.height - 3);
+            _sortIndicatorImage.frame = CGRectMake(bounds.size.width, 0, 32, bounds.size.height);
         }
     } else {
-        self.textLabel.frame = CGRectMake(14, 2, bounds.size.width - 28, bounds.size.height - 3);
+        self.textLabel.frame = CGRectMake(0, 2, bounds.size.width, bounds.size.height - 3);
     }
     
     if (self.selected) {
