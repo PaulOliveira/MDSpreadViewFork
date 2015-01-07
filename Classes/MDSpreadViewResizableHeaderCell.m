@@ -96,12 +96,12 @@ static CGFloat const IndicatorViewWidth = 1.5;
 #pragma mark - Resize
 
 - (CGRect)getViewIndicatorFrame {
-    UIView *superView = [self superview];
+    MDSpreadView *spreadView = (MDSpreadView *)[self superview];
     CGRect frame;
     if (self.headerCellStyle == MDSpreadViewHeaderCellStyleColumn) {
-        frame = CGRectMake(0, 0, superView.frame.size.width, IndicatorViewWidth);
+        frame = CGRectMake(0, 0, spreadView.contentSize.width, IndicatorViewWidth);
     } else {
-        frame = CGRectMake(0, 0, IndicatorViewWidth, superView.frame.size.height);
+        frame = CGRectMake(0, 0, IndicatorViewWidth, spreadView.contentSize.height);
     }
     return frame;
 }
@@ -121,7 +121,7 @@ static CGFloat const IndicatorViewWidth = 1.5;
 - (void)onResizeGesture:(UIPanGestureRecognizer *)gesture {
     CGPoint point = [gesture locationInView:self.superview];
     
-    CGRect newFrame = self.viewIndicator.frame;
+    CGRect newFrame = [self getViewIndicatorFrame];
     
     if (self.headerCellStyle == MDSpreadViewHeaderCellStyleColumn) {
         newFrame.origin.y = point.y;
