@@ -154,7 +154,7 @@ static CGFloat const IndicatorViewWidth = 1.5;
         }
         [self.viewIndicator setHidden:YES];
         [self.viewIndicator removeFromSuperview];
-    } else if (gesture.state == UIGestureRecognizerStateFailed) {
+    } else if (gesture.state == UIGestureRecognizerStateFailed || gesture.state == UIGestureRecognizerStateCancelled  ) {
         [self.viewIndicator setHidden:YES];
         [self.viewIndicator removeFromSuperview];
     }
